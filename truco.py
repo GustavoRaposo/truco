@@ -51,12 +51,42 @@ class Truco:
         if(self.jogador1.pontos >= 12 or self.jogador2.pontos >= 12):
             return False
         else:
-            print("mama aqui")
-            self.jogador1.pontos = 12
             return True
 
-def jogo():
-    truco = Truco
-    while True:
-        print("oi")
-        fimDeJogo()
+    def jogada(self, jogador):
+        pass
+
+    def rodada(self):
+        countP1 = 0
+        countP2 = 0
+        pontosDaRodada = 1
+
+        while (countP1 == 2 or countP2 == 2):
+            self.limpaMao()
+            self.distribuiCartas()
+
+            if self.jogador1.prioridade:
+                self.jogada(self.jogador1)
+                self.jogada(self.jogador2)
+            else:
+                self.jogada(self.jogador2)
+                self.jogada(self.jogador1)
+
+        if countP1 == 2:
+            self.jogador1.pontos += pontosDaRodada
+        if countP2 == 2:
+            self.jogador2.pontos += pontosDaRodada
+
+
+    def zeraPontos(self):
+        self.jogador1.pontos = 0
+        self.jogador2.pontos = 0
+
+    def jogo(self):
+        self.jogador1.prioridade = True
+        self.jogador2.prioridade = False
+        self.zeraPontos()
+        self.criaBaralho()
+        while self.fimDeJogo() == True:
+            self.jogador1.pontos = 12
+            False
