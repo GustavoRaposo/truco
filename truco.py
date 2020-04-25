@@ -60,10 +60,11 @@ class Truco:
         countP1 = 0
         countP2 = 0
         pontosDaRodada = 1
+        self.criaBaralho()
+        self.limpaMao()
+        self.distribuiCartas()
 
         while (countP1 == 2 or countP2 == 2):
-            self.limpaMao()
-            self.distribuiCartas()
 
             if self.jogador1.prioridade:
                 self.jogada(self.jogador1)
@@ -76,7 +77,7 @@ class Truco:
             self.jogador1.pontos += pontosDaRodada
         if countP2 == 2:
             self.jogador2.pontos += pontosDaRodada
-
+        self.baralho.clear()
 
     def zeraPontos(self):
         self.jogador1.pontos = 0
@@ -86,7 +87,7 @@ class Truco:
         self.jogador1.prioridade = True
         self.jogador2.prioridade = False
         self.zeraPontos()
-        self.criaBaralho()
+
         while self.fimDeJogo() == True:
-            self.jogador1.pontos = 12
-            False
+            self.jogador2.pontos = 13
+            self.fimDeJogo()
