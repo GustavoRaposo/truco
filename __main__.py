@@ -8,8 +8,12 @@ if __name__ == "__main__":
 
     jogoTruco.criaBaralho()
 
-    jogoTruco.printaBaralho()
+    # jogoTruco.printaBaralho()
 
     jogoTruco.embaralhaBaralho()
 
     jogoTruco.printaBaralho()
+
+    jogoTruco.distribuiCartas()
+
+    jogoTruco.printaMao()
