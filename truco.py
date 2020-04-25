@@ -42,3 +42,21 @@ class Truco:
         print("_____________________")
         for i in range(len(self.jogador2.mao)):
             print(self.jogador2.mao[i].valor + " " + self.jogador2.mao[i].naipe + "\n")
+
+    def limpaMao(self):
+        self.jogador1.mao.clear()
+        self.jogador2.mao.clear()
+
+    def fimDeJogo(self):
+        if(self.jogador1.pontos >= 12 or self.jogador2.pontos >= 12):
+            return False
+        else:
+            print("mama aqui")
+            self.jogador1.pontos = 12
+            return True
+
+def jogo():
+    truco = Truco
+    while True:
+        print("oi")
+        fimDeJogo()

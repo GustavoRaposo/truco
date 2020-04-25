@@ -1,4 +1,5 @@
 from truco import Truco
+import truco
 
 if __name__ == "__main__":
     naipes = ["ouros", "espadas", "copas", "paus"]
@@ -14,6 +15,8 @@ if __name__ == "__main__":
 
     jogoTruco.printaBaralho()
 
-    jogoTruco.distribuiCartas()
+    jogoTruco.limpaMao()
 
     jogoTruco.printaMao()
+
+    truco.jogo()
