@@ -3,20 +3,27 @@ import truco
 
 if __name__ == "__main__":
     naipes = ["ouros", "espadas", "copas", "paus"]
-    valores = ["A", "2", "3", "4", "5", "6", "7", "Q", "J", "K"]
+    nome = ["4", "5", "6", "7", "Q", "J", "K", "A", "2", "3"]
+    valores =[1,2,3,4,5,6,7,8,9,10]
 
-    jogoTruco = Truco(naipes, valores)
 
-    jogoTruco.criaBaralho()
+    jogoTruco = Truco(naipes, nome, valores)
+
+    jogoTruco.jogo()
+    #jogoTruco.criaBaralho()
 
     # jogoTruco.printaBaralho()
 
-    jogoTruco.embaralhaBaralho()
+    #jogoTruco.embaralhaBaralho()
 
-    jogoTruco.printaBaralho()
+    #jogoTruco.printaBaralho()
 
-    jogoTruco.limpaMao()
+    #jogoTruco.distribuiCartas()
 
-    jogoTruco.printaMao()
+    #jogoTruco.printaMao()
 
-    truco.jogo()
+    #jogoTruco.limpaMao()
+
+    #jogoTruco.printaMao()
+
+    #truco.jogo()
