@@ -101,25 +101,29 @@ class Truco:
         else:
             return False
 
-    def cartaMaior(self, carta0, carta1):
-        if(type(carta1) != "list"):
-            return carta1
+    def cartaMaior(self, cartas):
+        #Se houver somente uma carta na mao, retorna ela, caso contrário, é realizada uma
+        #busca da maior carta
+        if(type(cartas) != "list"):
+            return cartas
         else:
-            maior = carta1[0]
+            maior = cartas[0]
 
-            for i in carta1:
+            for i in cartas:
                 if self.maiorQueMesa(self.baralhoAux[i.info]):
                     maior = i
 
             return maior
 
-    def cartaMenor(self, carta0, carta1):
-        if(type(carta1) != "list"):
-            return carta1
+    def cartaMenor(self, cartas):
+        #Se houver somente uma carta, retorna ela, caso contrário, é realizada uma
+        #busca da menor carta
+        if(type(cartas) != "list"):
+            return cartas
         else:
-            menor = carta1[0]
+            menor = cartas[0]
 
-            for i in carta1:
+            for i in cartas:
                 if self.menorQueMesa(self.baralhoAux[i.info]):
                     menor = i
 
@@ -176,31 +180,30 @@ class Truco:
         #Todos os estados válidos para montar a árvore
         estados = self.todosEstados()
         node = tree
-        nivel = arvore.MAX
 
         #Cria o primeiro nível da árvore com as cartas da IA
         for i in self.jogador2.mao:
-            tree.criaAdjacenciaAtual(i.getFull())
+            tree.criaAdjacencia(i.getFull())
 
         #Cria os níveis na árvore em profundidade
         for i in estados:
             size = len(i) - 1
+            #Busca o nó inicial
             index = tree.getIndex(i[0])
             node = tree.adjacencias[index]
 
             for j in range(size):
-                nivel = arvore.MIN if nivel == arvore.MAX else arvore.MAX
+                #Cria uma adjacencia entre o nó atual e a jogada
+                node.criaAdjacencia(i[j + 1])
 
-                node.criaAdjacenciaAtual(i[j + 1])
-
-                #Troca o tipo do nível a cada nó criado
+                #Define o próximo nó como o nó inserido acima
                 index = node.getIndex(i[j + 1])
                 node = node.adjacencias[index]
             node = tree
 
         return tree
 
-    def alfabeta(self, profundidade, jogadorMax, estado, alfa, beta):
+    def alfabeta(self, profundidade, jogadorMax, estado):
         #Condição de parada, se a recursão chegar em uma folha da árvore
         if profundidade == 0:
             return estado
@@ -209,8 +212,12 @@ class Truco:
             valorMax = MIN
 
             for i in estado.adjacencias:
-                valor = self.alfabeta(profundidade - 1, not jogadorMax, i, alfa, beta)
-                valorMax = self.cartaMaior(valorMax, valor)
+                #Valor do próximo nó
+                valor = self.alfabeta(profundidade - 1, not jogadorMax, i)
+                #Maior carta nas adjacencias do nó
+                maiorCarta = self.cartaMaior(valor)
+                #Maior valor
+                valorMax = max(valorMax, maiorCarta.valor)
 
             return valorMax
 
@@ -218,18 +225,22 @@ class Truco:
             valorMin = MAX
 
             for i in estado.adjacencias:
-                valor = self.alfabeta(profundidade - 1, not jogadorMax, i, alfa, beta)
-                valorMin = self.cartaMenor(valorMin, valor)
+                #Valor do próximo nó
+                valor = self.alfabeta(profundidade - 1, not jogadorMax, i)
+                #Menor carta nas adjacencias do nó
+                menorCarta = self.cartaMenor(valor)
+                #Menor valor
+                valorMin = max(valorMax, menorCarta.valor)
 
             return valorMin
 
     def jogadaIa(self, jogador):
+        self.printaMao(jogador)
+
         if len(jogador.mao) > 1:
             #Criação da árvore para a jogada da IA
             tree = self.montaArvore()
-            MAX = 1000
-            MIN = -1000
-            melhorOpcao = self.alfabeta(3, True, tree, MIN, MAX)
+            melhorOpcao = self.alfabeta(3, True, tree)
             carta = self.baralhoAux[melhorOpcao.info]
         else:
             carta = jogador.mao[0]
@@ -268,9 +279,8 @@ class Truco:
         self.embaralhaBaralho()
         self.limpaMao()
         self.distribuiCartas()
-        #INVERTER PARA O JOGADOR 1 COMEÇAR
-        self.jogador1.prioridade = False
-        self.jogador2.prioridade = True
+        self.jogador1.prioridade = True
+        self.jogador2.prioridade = False
 
         while (self.acabou(countP1,countP2) == False or empate == 3):
             #define quem vai jogar
