@@ -90,6 +90,7 @@ class Truco:
         countP2 = 0
         rodadas = 1
         empate = 0
+        pula_empate =0
 
 
         self.criaBaralho()
@@ -100,6 +101,7 @@ class Truco:
         self.jogador2.prioridade = False
 
         while (self.acabou(countP1,countP2) == False or empate == 3):
+            print("estamos na rodada :" + str(rodadas))
             #define quem vai jogar
             if self.jogador1.prioridade:
                 jogada1 = self.jogadaPlayer(self.jogador1)
@@ -108,42 +110,44 @@ class Truco:
                 jogada2 = self.jogadaComp(self.jogador2)
                 jogada1 = self.jogadaPlayer(self.jogador1)
             # valida se a rodada é 2 ou 3 e se os jogadores jogaram cartas iguais e diferentes de manilhas
-            if(jogada1.valor == jogada2.valor and rodadas >= 2 and jogada1.valor != 11):
-                print("entrou no criterio")
+            if(jogada1.valor == jogada2.valor and rodadas >= 2 and jogada1.valor != 11 and (self.jogador1.primeiraRodada == True or self.jogador2.primeiraRodada == True)):
+                #print("entrou no criterio")
+                pula_empate = 1
                 if(self.jogador1.primeiraRodada == True):
                     countP1 = countP1 + 1
                     print("============ nova rodada ==============")
                 else:
                     countP2 = countP2 + 1
                     print("============ nova rodada ==============")
-            # define se os jogadores jogaram cartas iguais diferentes de manilhas
+            # define se os jogadores jogaram cartas iguais a manilhas
             if(jogada1.valor == jogada2 and jogada1.valor == 11):
                 print("entrou no jogadas iguais sem ser manilha")
                 if(jogada1.subvalor > jogada2.subvalor):
                     countP1 = countP1 + 1
                     if(rodadas == 1):
                         self.jogador1.primeiraRodada = True
-
-                    self.jogador1.prioridade = True
-                    self.jogador2.prioridade = False
-                    print("============ nova rodada ==============")
+                        self.jogador1.prioridade = True
+                        self.jogador2.prioridade = False
+                        print("============ nova rodada ==============")
                 else:
                     countP2 = countP2 + 1
                     if(rodadas == 1):
                         self.jogador2.primeiraRodada = True
-                    self.jogador1.prioridade = False
-                    self.jogador2.prioridade = True
-                    print("============ nova rodada ==============")
+                        self.jogador1.prioridade = False
+                        self.jogador2.prioridade = True
+                        print("============ nova rodada ==============")
             #se empatar na primeira rodada os dois ganham o ponto, se empatar mais vezes ninguem ganha ponto e se empatar 3 vezes sai do loop e ninguem ganha
-            if(jogada1.valor == jogada2.valor):
+            if(jogada1.valor == jogada2.valor and pula_empate == 0):
                 #print("entrou no igual")
                 if(empate == 0):
+                    #print("entrou aqui")
                     countP2 = countP2 + 1
                     countP1 = countP1 + 1
                     empate = empate + 1
                     print("============ nova rodada ==============")
                 else:
                     empate = empate + 1
+
             #se uma das cartas for maior que a outra
             if(jogada1.valor > jogada2.valor):
                 #print("valores : " + str(jogada1.valor) +" " + str(jogada2.valor))
@@ -152,17 +156,18 @@ class Truco:
                 #print(countP1)
                 if(rodadas == 1):
                     self.jogador1.primeiraRodada = True
-                self.jogador1.prioridade = True
-                self.jogador2.prioridade = False
-                print("============ nova rodada ==============")
-            else:
+                    self.jogador1.prioridade = True
+                    self.jogador2.prioridade = False
+                    print("============ nova rodada ==============")
+            elif jogada2.valor > jogada1.valor:
                 #print("entrou no maior ao contrario")
                 countP2 = countP2 + 1
                 if(rodadas == 1):
                     self.jogador2.primeiraRodada = True
-                self.jogador1.prioridade = False
-                self.jogador2.prioridade = True
-                print("============ nova rodada ==============")
+                    self.jogador1.prioridade = False
+                    self.jogador2.prioridade = True
+                    print("============ nova rodada ==============")
+            rodadas = rodadas + 1
 
 
         if countP1 == 2:
@@ -172,7 +177,7 @@ class Truco:
             self.jogador2.pontos += 1
             print("Computador Ganhou")
         self.baralho.clear()
-        print("==================================")
+        print("=============== Inicia nova sequencia de rodadas se ninguem ganhou o jogo ===================")
 
     def jogo(self):
         self.jogador1.prioridade = True
