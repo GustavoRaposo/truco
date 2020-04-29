@@ -1,7 +1,10 @@
+import sys
 import random
 import arvore
+import numbers
 import itertools
 from carta import Carta
+from copy import deepcopy
 from jogador import Jogador
 
 MAX = 1000
@@ -104,8 +107,8 @@ class Truco:
     def cartaMaior(self, cartas):
         #Se houver somente uma carta na mao, retorna ela, caso contrário, é realizada uma
         #busca da maior carta
-        if(type(cartas) != "list"):
-            return cartas
+        if type(cartas) != "list":
+            return self.baralhoAux[cartas.info]
         else:
             maior = cartas[0]
 
@@ -118,8 +121,8 @@ class Truco:
     def cartaMenor(self, cartas):
         #Se houver somente uma carta, retorna ela, caso contrário, é realizada uma
         #busca da menor carta
-        if(type(cartas) != "list"):
-            return cartas
+        if type(cartas) != "list":
+            return self.baralhoAux[cartas.info]
         else:
             menor = cartas[0]
 
@@ -203,9 +206,10 @@ class Truco:
 
         return tree
 
-    def alfabeta(self, profundidade, jogadorMax, estado):
+    def alfabeta(self, profundidade, jogadorMax, estado, alpha, beta):
         #Condição de parada, se a recursão chegar em uma folha da árvore
-        if profundidade == 0:
+
+        if profundidade == 0 or len(estado.adjacencias) <= 0:
             return estado
 
         if jogadorMax:
@@ -213,35 +217,58 @@ class Truco:
 
             for i in estado.adjacencias:
                 #Valor do próximo nó
-                valor = self.alfabeta(profundidade - 1, not jogadorMax, i)
-                #Maior carta nas adjacencias do nó
-                maiorCarta = self.cartaMaior(valor)
-                #Maior valor
-                valorMax = max(valorMax, maiorCarta.valor)
+                melhorValor = self.alfabeta(profundidade - 1, not jogadorMax, i, alpha, beta)
 
-            return valorMax
+                if isinstance(melhorValor, arvore.Arvore):
+                    valorMax = max(valorMax, self.baralhoAux[melhorValor.info].valor)
+                else:
+                    valorMax = max(valorMax, self.baralhoAux[melhorValor[1].info].valor)
+
+                #Maior valor
+                alpha = max(alpha, valorMax)
+
+                retorno = i
+                if beta <= alpha:
+                    break
+
+            return [valorMax, retorno]
 
         else:
             valorMin = MAX
 
             for i in estado.adjacencias:
                 #Valor do próximo nó
-                valor = self.alfabeta(profundidade - 1, not jogadorMax, i)
-                #Menor carta nas adjacencias do nó
-                menorCarta = self.cartaMenor(valor)
-                #Menor valor
-                valorMin = max(valorMax, menorCarta.valor)
+                melhorValor = self.alfabeta(profundidade - 1, not jogadorMax, i, alpha, beta)
 
-            return valorMin
+                if isinstance(melhorValor, arvore.Arvore):
+                    valorMin = min(valorMin, self.baralhoAux[melhorValor.info].valor)
+                else:
+                    valorMin = min(valorMin, self.baralhoAux[melhorValor[1].info].valor)
+
+                #Menor valor
+                beta = min(beta, valorMin)
+
+                retorno = i
+                if beta <= alpha:
+                    break
+
+            return [valorMin, retorno]
 
     def jogadaIa(self, jogador):
         self.printaMao(jogador)
+        print("\n\n")
 
         if len(jogador.mao) > 1:
+            MAX = 1000
+            MIN = -1000
             #Criação da árvore para a jogada da IA
             tree = self.montaArvore()
-            melhorOpcao = self.alfabeta(3, True, tree)
-            carta = self.baralhoAux[melhorOpcao.info]
+
+            melhorOpcao = self.alfabeta(6, False, tree, MIN, MAX)
+
+            print(str(melhorOpcao[0]) + " " + melhorOpcao[1].info)
+
+            carta = self.baralhoAux[melhorOpcao[1].info]
         else:
             carta = jogador.mao[0]
 
@@ -249,6 +276,11 @@ class Truco:
         print("Computador jogou: " + carta.getFull())
         print("--------------------------")
         return carta
+
+    def auxPrint(self, nodes):
+        for i in nodes:
+            sys.stdout.write(i.info + " ")
+        sys.stdout.write("\n")
 
     def jogadaPlayer(self, jogador):
         self.printaMao(jogador)
@@ -279,8 +311,9 @@ class Truco:
         self.embaralhaBaralho()
         self.limpaMao()
         self.distribuiCartas()
-        self.jogador1.prioridade = True
-        self.jogador2.prioridade = False
+        #INVERTER PARA O JOGADOR COMEÇAR
+        self.jogador1.prioridade = False
+        self.jogador2.prioridade = True
 
         while (self.acabou(countP1,countP2) == False or empate == 3):
             #define quem vai jogar

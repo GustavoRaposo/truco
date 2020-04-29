@@ -3,7 +3,7 @@
 import sys
 
 class Arvore:
-    def __init__(self, info=None):
+    def __init__(self, info):
         self.info = info
         self.adjacencias = []
 
@@ -27,8 +27,7 @@ class Arvore:
 
     #Imprime a árvore, esse método começa a imprime nó por nó em profundidade
     def printa(self):
-        sys.stdout.write(self.info + "\n")
-
         if self.adjacencias:
+            print(self.adjacencias)
             for i in self.adjacencias:
                 i.printa()
