@@ -1,14 +1,13 @@
-import sys
+#encoding: utf-8
 
 class Carta:
-    def __init__(self, naipe, nome, valor, subvalor):
-        self.naipe = naipe
+    def __init__(self, valor, naipe, peso):
         self.valor = valor
-        self.nome = nome
-        self.subvalor = subvalor
+        self.naipe = naipe
+        self.peso = peso
 
     def getFull(self):
-        return str(self.nome) + " " + (self.naipe)
+        return self.valor + " " + self.naipe.nome
 
     def printa(self):
-        print(self.nome + " " + self.naipe)
+        print(self.valor + " " + self.naipe.nome)
