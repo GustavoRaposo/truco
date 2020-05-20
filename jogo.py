@@ -183,20 +183,14 @@ class Jogo:
     #Função personalizada para maior valor
     def maior(self, carta0, carta1):
         if not isinstance(carta0, Number):
-            carta0busca = self.cartasRodada[carta0.info]
-            carta1busca = self.cartasRodada[carta0.info]
-
-            if carta0busca.peso > carta1busca.peso:
-                return carta0
-            elif carta0busca.peso < carta1busca.peso:
-                return carta1
-            elif carta0busca.peso == carta1busca.peso:
-                if carta0busca.naipe.peso > carta1busca.naipe.peso:
-                    return carta0
-                elif carta0busca.naipe.peso < carta1busca.naipe.peso:
-                    return carta1
-                elif carta0busca.naipe.peso == carta1busca.naipe.peso:
-                    return carta0
+            peso_atual = 100
+            card = 0
+            for i in range(len(self.jogadores[1].mao)):
+                if self.jogadores[1].mao[i].peso < peso_atual and self.jogadores[1].mao[i].peso > self.cartaMesa.peso:
+                    peso_atual = self.jogadores[1].mao[i].peso
+                    card = i
+            self.jogadores[1].mao[card].info = self.jogadores[1].mao[card].valor + ' ' + self.jogadores[1].mao[card].naipe.nome
+            return self.jogadores[1].mao[card]
         else:
             return carta1
 
