@@ -297,18 +297,18 @@ class Jogo:
         escolhendo = True
         self.jogadores[0].printaMao()
         print("")
-        '''
+
         while escolhendo:
             try:
                 escolha = int(input("selecione entre 0 e " + str(len(self.jogadores[0].mao) -1) + ": "))
-                carta = jogador.mao[escolha]
+                carta = self.jogadores[0].mao[escolha]
                 escolhendo = False
             except ValueError:
                 print("Escolha inválida!")
             except IndexError:
                 print("Escolha fora dos limites!")
-        '''
-        carta = self.jogadores[0].mao[randint(0, len(self.jogadores[0].mao) - 1)]
+
+        # carta = self.jogadores[0].mao[randint(0, len(self.jogadores[0].mao) - 1)]
 
         self.cartaMesa = carta
         self.jogadores[0].mao.remove(carta)
