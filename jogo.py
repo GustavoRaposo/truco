@@ -178,7 +178,8 @@ class Jogo:
 
         return tree
 
-    #Função personalizada para maior valor
+    #Função personalizada para maior valor.
+    #Heurística: Busca jogar a menor carta que ganhe da escolhida pelo jogador.
     def maior(self, carta0, carta1):
         if not isinstance(carta0, Number):
             peso_atual = 100
@@ -198,14 +199,14 @@ class Jogo:
             carta0busca = self.cartasRodada[carta0.info]
             carta1busca = self.cartasRodada[carta0.info]
 
-            if carta0busca.peso < carta1busca.peso:
+            if carta0busca.peso > carta1busca.peso:
                 return carta0
-            elif carta0busca.peso > carta1busca.peso:
+            elif carta0busca.peso < carta1busca.peso:
                 return carta1
             elif carta0busca.peso == carta1busca.peso:
-                if carta0busca.naipe.peso < carta1busca.naipe.peso:
+                if carta0busca.naipe.peso > carta1busca.naipe.peso:
                     return carta0
-                elif carta0busca.naipe.peso > carta1busca.naipe.peso:
+                elif carta0busca.naipe.peso < carta1busca.naipe.peso:
                     return carta1
                 elif carta0busca.naipe.peso == carta1busca.naipe.peso:
                     return carta0
