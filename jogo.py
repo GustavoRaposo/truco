@@ -36,10 +36,10 @@ class Jogo:
         self.baralho = deepcopy(self.cartas)
         self.cartasRodada = dict([(i.getFull(), i) for i in self.cartas])
         self.embaralhaBaralho()
-        self.distribuiCartas()
         self.viraCarta()
         self.defineManilhas()
         self.ponderaCartas()
+        self.distribuiCartas()
 
     def embaralhaBaralho(self):
         #Embaralha o baralho
@@ -89,8 +89,6 @@ class Jogo:
         #Atribui valores maiores para as cartas com valores de vira e manilha
         for i in cartasPonderadas:
             if i.getFull() in manilhasText:
-                i.peso = 12
-            if i.peso == self.vira.peso:
                 i.peso = 11
 
         #Cria um novo dicionário para ponderar
